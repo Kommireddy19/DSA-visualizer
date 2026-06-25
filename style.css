@@ -1,0 +1,522 @@
+/* =========================
+   GLOBAL STYLES
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f4f7fb;
+  min-height: 100vh;
+  color: #222;
+}
+
+/* =========================
+   PAGE SYSTEM
+========================= */
+.page {
+  display: none;
+  min-height: 100vh;
+  padding: 30px 20px;
+}
+
+.page.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#categoryPage.active,
+#dsListPage.active,
+#visualizerPage.active {
+  display: block;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.container h1 {
+  color: #1e3a8a;
+  margin-bottom: 30px;
+  font-size: 36px;
+}
+
+/* =========================
+   HOME PAGE
+========================= */
+.hero-box {
+  background: #ffffff;
+  width: 90%;
+  max-width: 850px;
+  padding: 50px;
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.hero-box h1 {
+  font-size: 42px;
+  color: #1e3a8a;
+  margin-bottom: 20px;
+}
+
+.hero-box p {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.main-btn,
+.back-btn,
+.action-btn {
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.main-btn,
+.action-btn {
+  background: #2563eb;
+}
+
+.main-btn:hover,
+.action-btn:hover {
+  background: #1d4ed8;
+}
+
+.back-btn {
+  background: #6b7280;
+}
+
+.back-btn:hover {
+  background: #4b5563;
+}
+
+.btn-row {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* =========================
+   CARD GRID
+========================= */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+}
+
+.card {
+  background: #ffffff;
+  padding: 28px 22px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: 0.3s ease;
+  text-align: center;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  background: #eff6ff;
+}
+
+.card h2 {
+  color: #2563eb;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+.card p {
+  color: #555;
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+/* =========================
+   VISUALIZER BOX
+========================= */
+.visualizer-box {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  text-align: center;
+  width: 100%;
+}
+
+/* =========================
+   CONTROLS
+========================= */
+.controls {
+  margin-bottom: 25px;
+}
+
+.controls input {
+  width: 180px;
+  padding: 10px;
+  margin: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  font-size: 15px;
+}
+
+.controls input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 4px rgba(37, 99, 235, 0.25);
+}
+
+.controls .action-btn {
+  margin: 6px;
+}
+
+/* =========================
+   MESSAGE AREA
+========================= */
+.message {
+  min-height: 32px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+/* =========================
+   COMPLEXITY BOX
+========================= */
+.complexity-box {
+  margin-top: 30px;
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: left;
+  line-height: 1.8;
+}
+
+.complexity-box h2 {
+  color: #1e3a8a;
+  margin-bottom: 10px;
+  font-size: 24px;
+}
+
+.complexity-box p {
+  font-size: 16px;
+  color: #333;
+}
+
+/* =========================
+   EMPTY TEXT
+========================= */
+.empty-text {
+  font-size: 18px;
+  color: #555;
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* =========================
+   ARRAY VISUALIZATION
+========================= */
+.array-container {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  min-height: 110px;
+  align-items: center;
+}
+
+.array-box {
+  width: 75px;
+  height: 75px;
+  background: #3b82f6;
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  font-weight: bold;
+  position: relative;
+  transition: 0.3s;
+}
+
+.array-box span {
+  position: absolute;
+  bottom: -24px;
+  color: #111;
+  font-size: 13px;
+  font-weight: normal;
+}
+
+/* =========================
+   STACK VISUALIZATION
+========================= */
+.stack-container {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  gap: 10px;
+  min-height: 250px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.stack-box {
+  width: 170px;
+  height: 58px;
+  background: #8b5cf6;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;
+}
+
+/* =========================
+   QUEUE VISUALIZATION
+========================= */
+.queue-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  min-height: 110px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.queue-box {
+  width: 80px;
+  height: 60px;
+  background: #f97316;
+  color: white;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;
+}
+
+/* =========================
+   LINKED LIST VISUALIZATION
+========================= */
+.linkedlist-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 130px;
+  margin-top: 20px;
+  gap: 12px;
+}
+
+.node {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.node-box {
+  width: 85px;
+  height: 58px;
+  background: #10b981;
+  color: white;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;
+}
+
+.arrow {
+  font-size: 28px;
+  color: #333;
+  font-weight: bold;
+}
+
+/* =========================
+   GENERAL STRUCTURE OUTPUT
+   Used for BST / Heap / Graph / Trie text display
+========================= */
+.structure-output {
+  min-height: 180px;
+  margin-top: 20px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 10px;
+  white-space: pre-wrap;
+  text-align: left;
+  font-size: 18px;
+  line-height: 1.8;
+  color: #222;
+  overflow-x: auto;
+}
+
+/* =========================
+   OPTIONAL HIGHLIGHT HELPERS
+========================= */
+.highlight-green {
+  background: #16a34a !important;
+}
+
+.highlight-red {
+  background: #dc2626 !important;
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+@media (max-width: 992px) {
+  .container h1 {
+    font-size: 32px;
+  }
+
+  .hero-box h1 {
+    font-size: 36px;
+  }
+
+  .card h2 {
+    font-size: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-box {
+    padding: 35px 22px;
+  }
+
+  .hero-box h1 {
+    font-size: 30px;
+  }
+
+  .hero-box p {
+    font-size: 16px;
+  }
+
+  .container h1 {
+    font-size: 28px;
+  }
+
+  .controls input {
+    width: 100%;
+    max-width: 260px;
+  }
+
+  .array-box {
+    width: 65px;
+    height: 65px;
+    font-size: 20px;
+  }
+
+  .stack-box {
+    width: 150px;
+    height: 52px;
+    font-size: 18px;
+  }
+
+  .queue-box {
+    width: 70px;
+    height: 55px;
+    font-size: 18px;
+  }
+
+  .node-box {
+    width: 75px;
+    height: 52px;
+    font-size: 18px;
+  }
+
+  .structure-output {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 20px 12px;
+  }
+
+  .hero-box {
+    padding: 28px 16px;
+  }
+
+  .hero-box h1 {
+    font-size: 26px;
+  }
+
+  .container h1 {
+    font-size: 24px;
+  }
+
+  .card {
+    padding: 22px 16px;
+  }
+
+  .card h2 {
+    font-size: 20px;
+  }
+
+  .card p {
+    font-size: 14px;
+  }
+
+  .main-btn,
+  .back-btn,
+  .action-btn {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .btn-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .array-box {
+    width: 58px;
+    height: 58px;
+    font-size: 18px;
+  }
+
+  .queue-box,
+  .node-box {
+    width: 65px;
+    height: 50px;
+    font-size: 17px;
+  }
+
+  .stack-box {
+    width: 135px;
+    height: 50px;
+    font-size: 17px;
+  }
+}

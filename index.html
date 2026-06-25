@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Structure Visualizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- =========================
+       PAGE 1 : HOME PAGE
+  ========================== -->
+  <section id="homePage" class="page active">
+    <div class="hero-box">
+      <h1>Data Structure Visualizer</h1>
+      <p>
+        Learn and perform operations on
+        <strong>Linear</strong> and <strong>Non-Linear</strong>
+        Data Structures with simple visualizations.
+      </p>
+      <button class="main-btn" onclick="showPage('categoryPage')">
+        Open Visualizer
+      </button>
+    </div>
+  </section>
+
+  <!-- =========================
+       PAGE 2 : CATEGORY PAGE
+  ========================== -->
+  <section id="categoryPage" class="page">
+    <div class="container">
+      <h1>Select Data Structure Category</h1>
+
+      <div class="card-grid">
+        <!-- Linear DS Card -->
+        <div class="card" onclick="openCategory('linear')">
+          <h2>Linear Data Structures</h2>
+          <p>
+            Array, Stack, Queue, Linked List
+          </p>
+        </div>
+
+        <!-- Non Linear DS Card -->
+        <div class="card" onclick="openCategory('nonlinear')">
+          <h2>Non-Linear Data Structures</h2>
+          <p>
+            Binary Search Tree, Heap, Graph, Trie
+          </p>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="back-btn" onclick="showPage('homePage')">Back</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       PAGE 3 : DS LIST PAGE
+       (Filled dynamically using JS)
+  ========================== -->
+  <section id="dsListPage" class="page">
+    <div class="container">
+      <h1 id="dsListTitle">Data Structures</h1>
+
+      <!-- JS will insert cards here -->
+      <div id="dsListContainer" class="card-grid"></div>
+
+      <div class="btn-row">
+        <button class="back-btn" onclick="showPage('categoryPage')">Back</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       PAGE 4 : VISUALIZER PAGE
+       (UI for selected DS comes from JS)
+  ========================== -->
+  <section id="visualizerPage" class="page">
+    <div class="container">
+      <h1 id="visualizerTitle">Visualizer</h1>
+
+      <!-- JS will inject Array / Stack / Queue / Linked List / BST / etc UI here -->
+      <div id="visualizerPanel"></div>
+
+      <div class="btn-row">
+        <button class="back-btn" onclick="showPage('dsListPage')">Back</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
