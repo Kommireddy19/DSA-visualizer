@@ -606,19 +606,14 @@ margin-top:15px;
         QUEUE
 ===========================*/
 
-.queueContainer{
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-align-items:center;
-
-min-height:400px;
-
+.queueContainer {
+    display: flex;
+    flex-direction: row; /* ← change this */
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
 }
+
 
 .queueRow{
 
