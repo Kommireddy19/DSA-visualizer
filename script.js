@@ -1,1457 +1,1688 @@
-/* =========================
-   PAGE + NAVIGATION SYSTEM
-========================= */
+/* ==========================================
+              PAGE NAVIGATION
+========================================== */
+
 const pages = document.querySelectorAll(".page");
-const dsListContainer = document.getElementById("dsListContainer");
-const dsListTitle = document.getElementById("dsListTitle");
-const visualizerTitle = document.getElementById("visualizerTitle");
-const visualizerPanel = document.getElementById("visualizerPanel");
 
-let currentCategory = "";
-let currentDS = "";
-
-/* Data structure lists */
-const linearDS = [
-  { name: "Array", key: "array" },
-  { name: "Stack", key: "stack" },
-  { name: "Queue", key: "queue" },
-  { name: "Linked List", key: "linkedlist" }
-];
-
-const nonlinearDS = [
-  { name: "Binary Search Tree", key: "bst" },
-  { name: "Heap", key: "heap" },
-  { name: "Graph", key: "graph" },
-  { name: "Trie", key: "trie" }
-];
+let previousPage = "categoryPage";
 
 function showPage(pageId) {
-  pages.forEach(page => page.classList.remove("active"));
-  document.getElementById(pageId).classList.add("active");
+
+    pages.forEach(page => page.classList.remove("active"));
+
+    document.getElementById(pageId).classList.add("active");
+
 }
 
-function openCategory(category) {
-  currentCategory = category;
-  showPage("dsListPage");
-  dsListContainer.innerHTML = "";
 
-  let data = [];
-  if (category === "linear") {
-    dsListTitle.textContent = "Linear Data Structures";
-    data = linearDS;
-  } else {
-    dsListTitle.textContent = "Non-Linear Data Structures";
-    data = nonlinearDS;
-  }
+/* ==========================================
+              DATA STRUCTURES
+========================================== */
 
-  data.forEach(item => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <h2>${item.name}</h2>
-      <p>Click to open ${item.name} visualizer</p>
-    `;
-    card.onclick = () => openVisualizer(item.key, item.name);
-    dsListContainer.appendChild(card);
-  });
+const linearStructures = [
+
+{
+title:"Array",
+description:"Stores elements in contiguous memory locations for fast access."
+},
+
+{
+title:"Stack",
+description:"Follows Last In First Out (LIFO) principle."
+},
+
+{
+title:"Queue",
+description:"Follows First In First Out (FIFO) principle."
+},
+
+{
+title:"Linked List",
+description:"Collection of nodes connected using pointers."
 }
 
-function openVisualizer(dsKey, dsName) {
-  currentDS = dsKey;
-  visualizerTitle.textContent = dsName;
-  showPage("visualizerPage");
+];
 
-  if (dsKey === "array") renderArrayUI();
-  else if (dsKey === "stack") renderStackUI();
-  else if (dsKey === "queue") renderQueueUI();
-  else if (dsKey === "linkedlist") renderLinkedListUI();
-  else if (dsKey === "bst") renderBSTUI();
-  else if (dsKey === "heap") renderHeapUI();
-  else if (dsKey === "graph") renderGraphUI();
-  else if (dsKey === "trie") renderTrieUI();
+
+const nonLinearStructures = [
+
+{
+title:"Tree",
+description:"Hierarchical non-linear data structure."
+},
+
+{
+title:"Graph",
+description:"Collection of vertices connected by edges."
 }
 
-/* =========================
-   ARRAY VISUALIZER
-========================= */
-let arrayData = [];
+];
 
-function renderArrayUI() {
-  visualizerPanel.innerHTML = `
-    <div class="visualizer-box">
-      <div class="controls">
-        <input type="number" id="arrayValue" placeholder="Enter value" />
-        <input type="number" id="arrayIndex" placeholder="Enter index" />
-        <button class="action-btn" onclick="arrayInsertBeginning()">Insert Beginning</button>
-        <button class="action-btn" onclick="arrayInsertEnd()">Insert End</button>
-        <button class="action-btn" onclick="arrayInsertAtIndex()">Insert At Index</button>
-        <button class="action-btn" onclick="arrayDeleteByIndex()">Delete By Index</button>
-        <button class="action-btn" onclick="arrayDeleteByValue()">Delete By Value</button>
-        <button class="action-btn" onclick="arraySearch()">Search</button>
-        <button class="action-btn" onclick="arrayUpdate()">Update</button>
-        <button class="action-btn" onclick="arrayReverse()">Reverse</button>
-        <button class="action-btn" onclick="arrayReset()">Reset</button>
-      </div>
 
-      <div id="arrayOutput" class="array-container"></div>
-      <div id="arrayMessage" class="message"></div>
+/* ==========================================
+          OPEN CATEGORY
+========================================== */
 
-      <div class="complexity-box">
-        <h2>Array Operations</h2>
-        <p><strong>Insert / Delete:</strong> O(n)</p>
-        <p><strong>Search:</strong> O(n)</p>
-        <p><strong>Update:</strong> O(1)</p>
-        <p><strong>Reverse:</strong> O(n)</p>
-      </div>
-    </div>
-  `;
-  drawArray();
+function openCategory(type){
+
+previousPage="categoryPage";
+
+showPage("listPage");
+
+const title=document.getElementById("listTitle");
+
+const container=document.getElementById("listContainer");
+
+container.innerHTML="";
+
+let data=[];
+
+if(type==="linear"){
+
+title.innerHTML="Linear Data Structures";
+
+data=linearStructures;
+
 }
 
-function drawArray(highlightIndex = -1) {
-  const output = document.getElementById("arrayOutput");
-  if (!output) return;
+else{
 
-  output.innerHTML = "";
+title.innerHTML="Non-Linear Data Structures";
 
-  if (arrayData.length === 0) {
-    output.innerHTML = `<p class="empty-text">Array is empty</p>`;
-    return;
-  }
+data=nonLinearStructures;
 
-  arrayData.forEach((value, index) => {
-    const box = document.createElement("div");
-    box.className = "array-box";
-    if (index === highlightIndex) box.style.background = "#16a34a";
-    box.innerHTML = `${value}<span>${index}</span>`;
-    output.appendChild(box);
-  });
 }
 
-function arrayMsg(text, color = "#dc2626") {
-  const msg = document.getElementById("arrayMessage");
-  msg.textContent = text;
-  msg.style.color = color;
+data.forEach(item=>{
+
+container.innerHTML+=`
+
+<div class="card">
+
+<h2>${item.title}</h2>
+
+<p>${item.description}</p>
+
+<button onclick="toggleLearn(this)">
+Learn More
+</button>
+
+<button onclick="openVisualizer('${item.title}')">
+Open
+</button>
+
+<div class="learn-box">
+
+<h3>${item.title}</h3>
+
+<p>${item.description}</p>
+
+</div>
+
+</div>
+
+`;
+
+});
+
 }
 
-function getArrayValue() {
-  return document.getElementById("arrayValue").value.trim();
+
+/* ==========================================
+             LEARN MORE
+========================================== */
+
+function toggleLearn(button){
+
+const learnBox=button.nextElementSibling.nextElementSibling;
+
+if(learnBox.style.display==="block"){
+
+learnBox.style.display="none";
+
+button.innerHTML="Learn More";
+
 }
 
-function getArrayIndex() {
-  return document.getElementById("arrayIndex").value.trim();
+else{
+
+learnBox.style.display="block";
+
+button.innerHTML="Hide";
+
 }
 
-function arrayInsertBeginning() {
-  const value = getArrayValue();
-  if (value === "") {
-    arrayMsg("Please enter a value.");
-    return;
-  }
-  arrayData.unshift(Number(value));
-  drawArray(0);
-  arrayMsg(`Inserted ${value} at beginning`, "green");
 }
 
-function arrayInsertEnd() {
-  const value = getArrayValue();
-  if (value === "") {
-    arrayMsg("Please enter a value.");
-    return;
-  }
-  arrayData.push(Number(value));
-  drawArray(arrayData.length - 1);
-  arrayMsg(`Inserted ${value} at end`, "green");
+
+/* ==========================================
+            OPEN VISUALIZER
+========================================== */
+
+function openVisualizer(name){
+
+previousPage="listPage";
+
+showPage("visualizerPage");
+
+document.getElementById("visualizerTitle").innerHTML=name;
+
+document.getElementById("visualizerPanel").innerHTML=`
+
+<h2 style="text-align:center;margin-top:100px;">
+
+${name}
+
+</h2>
+
+<p style="text-align:center;font-size:20px;margin-top:20px;">
+
+Operations will be added here.
+
+</p>
+
+`;
+
 }
 
-function arrayInsertAtIndex() {
-  const value = getArrayValue();
-  const index = getArrayIndex();
 
-  if (value === "" || index === "") {
-    arrayMsg("Please enter both value and index.");
-    return;
-  }
+/* ==========================================
+             BACK BUTTON
+========================================== */
 
-  const i = Number(index);
-  if (i < 0 || i > arrayData.length) {
-    arrayMsg("Invalid index.");
-    return;
-  }
+function goBack(){
 
-  arrayData.splice(i, 0, Number(value));
-  drawArray(i);
-  arrayMsg(`Inserted ${value} at index ${i}`, "green");
+showPage(previousPage);
+
 }
 
-function arrayDeleteByIndex() {
-  const index = getArrayIndex();
-  if (index === "") {
-    arrayMsg("Please enter index.");
-    return;
-  }
+function openVisualizer(name){
 
-  const i = Number(index);
-  if (i < 0 || i >= arrayData.length) {
-    arrayMsg("Invalid index.");
-    return;
-  }
+    previousPage="listPage";
 
-  const deleted = arrayData[i];
-  arrayData.splice(i, 1);
-  drawArray();
-  arrayMsg(`Deleted ${deleted} from index ${i}`, "green");
+    showPage("visualizerPage");
+
+    document.getElementById("visualizerTitle").innerHTML=name;
+
+    if(name==="Array"){
+
+        renderArray();
+
+    }
+
+    else if(name==="Stack"){
+
+        renderStack();
+
+    }
+
+    else if(name==="Queue"){
+
+        renderQueue();
+
+    }
+    else if(name==="Linked List"){
+
+    renderLinkedList();
+
+    }
+    else if(name==="Tree"){
+
+    renderTree();
+
+    }
+    else if(name==="Graph"){
+
+    renderGraph();
+
+    }
+
+    else{
+
+        document.getElementById("visualizerPanel").innerHTML=`
+        <h2 style="text-align:center;margin-top:120px;">
+        ${name}
+        </h2>
+        <p style="text-align:center;">
+        Operations will be added soon.
+        </p>
+        `;
+    }
+
 }
 
-function arrayDeleteByValue() {
-  const value = getArrayValue();
-  if (value === "") {
-    arrayMsg("Please enter value.");
-    return;
-  }
+/* ==========================================
+              ARRAY VISUALIZER
+========================================== */
 
-  const v = Number(value);
-  const idx = arrayData.indexOf(v);
-  if (idx === -1) {
-    arrayMsg(`${v} not found.`);
-    return;
-  }
+let array=[];
 
-  arrayData.splice(idx, 1);
-  drawArray();
-  arrayMsg(`Deleted value ${v}`, "green");
+function renderArray() {
+
+document.getElementById("visualizerPanel").innerHTML = `
+
+<div class="ds-layout">
+
+<div class="left-panel">
+
+<h2>Array Operations</h2>
+
+<input type="number" id="arrayValue" placeholder="Enter Value">
+
+<input type="number" id="arrayIndex" placeholder="Enter Index">
+
+<button onclick="insertBeginning()">Insert Beginning</button>
+
+<button onclick="insertEnd()">Insert End</button>
+
+<button onclick="insertIndex()">Insert At Index</button>
+
+<button onclick="deleteValue()">Delete Value</button>
+
+<button onclick="searchValue()">Search</button>
+
+<button onclick="updateValue()">Update</button>
+
+<button onclick="reverseArray()">Reverse</button>
+
+<button onclick="resetArray()">Reset</button>
+
+<div id="arrayMessage" class="message"></div>
+
+<div class="complexity">
+
+<h3>Time Complexity</h3>
+
+<p>Insert Beginning : O(n)</p>
+<p>Insert End : O(1)</p>
+<p>Insert Index : O(n)</p>
+<p>Delete : O(n)</p>
+<p>Search : O(n)</p>
+<p>Update : O(1)</p>
+<p>Reverse : O(n)</p>
+
+</div>
+
+</div>
+
+
+<div class="right-panel">
+
+<h2>Array Visualization</h2>
+
+<div id="arrayContainer" class="arrayContainer"></div>
+
+</div>
+
+</div>
+
+`;
+
+drawArray();
+
+}
+function drawArray() {
+
+const container = document.getElementById("arrayContainer");
+
+container.innerHTML = "";
+
+if(array.length==0){
+
+container.innerHTML="<h3>Array is Empty</h3>";
+
+return;
+
 }
 
-function arraySearch() {
-  const value = getArrayValue();
-  if (value === "") {
-    arrayMsg("Please enter value to search.");
-    return;
-  }
+array.forEach((value,index)=>{
 
-  const v = Number(value);
-  const idx = arrayData.indexOf(v);
+container.innerHTML+=`
 
-  if (idx === -1) {
-    drawArray();
-    arrayMsg(`${v} not found.`);
-  } else {
-    drawArray(idx);
-    arrayMsg(`${v} found at index ${idx}`, "green");
-  }
+<div class="arrayItem">
+
+<div class="box">${value}</div>
+
+<div class="index">${index}</div>
+
+</div>
+
+`;
+
+});
+
 }
 
-function arrayUpdate() {
-  const value = getArrayValue();
-  const index = getArrayIndex();
+function message(text,color="green"){
 
-  if (value === "" || index === "") {
-    arrayMsg("Please enter both new value and index.");
-    return;
-  }
+const msg=document.getElementById("arrayMessage");
 
-  const i = Number(index);
-  if (i < 0 || i >= arrayData.length) {
-    arrayMsg("Invalid index.");
-    return;
-  }
+msg.innerHTML=text;
 
-  arrayData[i] = Number(value);
-  drawArray(i);
-  arrayMsg(`Updated index ${i} with ${value}`, "green");
+msg.style.color=color;
+
 }
 
-function arrayReverse() {
-  if (arrayData.length === 0) {
-    arrayMsg("Array is empty.");
-    return;
-  }
-  arrayData.reverse();
-  drawArray();
-  arrayMsg("Array reversed successfully.", "green");
+function insertBeginning(){
+
+const value=document.getElementById("arrayValue").value;
+
+if(value==="") return;
+
+array.unshift(Number(value));
+
+drawArray();
+
+message("Inserted at Beginning");
+
+}
+function insertEnd(){
+
+const value=document.getElementById("arrayValue").value;
+
+if(value==="") return;
+
+array.push(Number(value));
+
+drawArray();
+
+message("Inserted at End");
+
+}
+function insertIndex(){
+
+const value=document.getElementById("arrayValue").value;
+
+const index=document.getElementById("arrayIndex").value;
+
+if(value==="" || index==="") return;
+
+array.splice(index,0,Number(value));
+
+drawArray();
+
+message("Inserted Successfully");
+
+}
+function deleteValue(){
+
+const value=document.getElementById("arrayValue").value;
+
+const index=array.indexOf(Number(value));
+
+if(index==-1){
+
+message("Value Not Found","red");
+
+return;
+
 }
 
-function arrayReset() {
-  arrayData = [];
-  drawArray();
-  arrayMsg("Array cleared successfully.", "green");
+array.splice(index,1);
+
+drawArray();
+
+message("Deleted Successfully");
+
+}
+function searchValue(){
+
+const value=document.getElementById("arrayValue").value;
+
+const index=array.indexOf(Number(value));
+
+if(index==-1){
+
+message("Value Not Found","red");
+
 }
 
-/* =========================
-   STACK VISUALIZER
-========================= */
-let stackData = [];
+else{
 
-function renderStackUI() {
-  visualizerPanel.innerHTML = `
-    <div class="visualizer-box">
-      <div class="controls">
-        <input type="number" id="stackValue" placeholder="Enter value" />
-        <button class="action-btn" onclick="stackPush()">Push</button>
-        <button class="action-btn" onclick="stackPop()">Pop</button>
-        <button class="action-btn" onclick="stackPeek()">Peek</button>
-        <button class="action-btn" onclick="stackIsEmpty()">isEmpty</button>
-        <button class="action-btn" onclick="stackSize()">Size</button>
-        <button class="action-btn" onclick="stackReset()">Reset</button>
-      </div>
+message("Found at Index : "+index);
 
-      <div id="stackOutput" class="stack-container"></div>
-      <div id="stackMessage" class="message"></div>
+}
 
-      <div class="complexity-box">
+}
+function updateValue(){
+
+const value=document.getElementById("arrayValue").value;
+
+const index=document.getElementById("arrayIndex").value;
+
+if(value==="" || index==="") return;
+
+array[index]=Number(value);
+
+drawArray();
+
+message("Updated Successfully");
+
+}
+function reverseArray(){
+
+array.reverse();
+
+drawArray();
+
+message("Array Reversed");
+
+}
+function resetArray(){
+
+array=[];
+
+drawArray();
+
+message("Array Cleared");
+
+}
+
+/* ==========================================
+                STACK VISUALIZER
+========================================== */
+
+let stack=[];
+
+function renderStack(){
+
+document.getElementById("visualizerPanel").innerHTML=`
+
+<div class="ds-layout">
+
+    <div class="left-panel">
+
         <h2>Stack Operations</h2>
-        <p><strong>Push:</strong> O(1)</p>
-        <p><strong>Pop:</strong> O(1)</p>
-        <p><strong>Peek:</strong> O(1)</p>
-        <p><strong>isEmpty:</strong> O(1)</p>
-        <p><strong>Size:</strong> O(1)</p>
-      </div>
+
+        <input type="number" id="stackValue" placeholder="Enter Value">
+
+        <button onclick="pushStack()">Push</button>
+
+        <button onclick="popStack()">Pop</button>
+
+        <button onclick="peekStack()">Peek</button>
+
+        <button onclick="isEmptyStack()">is Empty</button>
+
+        <button onclick="sizeStack()">Size</button>
+
+        <button onclick="resetStack()">Reset</button>
+
+        <div id="stackMessage" class="message"></div>
+
+        <div class="complexity">
+
+            <h3>Time Complexity</h3>
+
+            <p>Push : O(1)</p>
+            <p>Pop : O(1)</p>
+            <p>Peek : O(1)</p>
+            <p>isEmpty : O(1)</p>
+            <p>Size : O(1)</p>
+
+        </div>
+
     </div>
-  `;
-  drawStack();
+
+    <div class="right-panel">
+
+        <h2>Stack Visualization</h2>
+
+        <div id="stackContainer" class="stackContainer"></div>
+
+    </div>
+
+</div>
+
+`;
+
+drawStack();
+
+}
+function drawStack(){
+
+const container=document.getElementById("stackContainer");
+
+container.innerHTML="";
+
+if(stack.length===0){
+
+container.innerHTML="<h2>Stack is Empty</h2>";
+
+return;
+
 }
 
-function drawStack(highlightTop = false) {
-  const output = document.getElementById("stackOutput");
-  output.innerHTML = "";
+container.innerHTML+=`
 
-  if (stackData.length === 0) {
-    output.innerHTML = `<p class="empty-text">Stack is empty</p>`;
-    return;
-  }
+<div class="topLabel">TOP</div>
 
-  stackData.forEach((value, index) => {
-    const box = document.createElement("div");
-    box.className = "stack-box";
-    box.textContent = value;
+`;
 
-    if (highlightTop && index === stackData.length - 1) {
-      box.style.background = "#16a34a";
-    }
+for(let i=stack.length-1;i>=0;i--){
 
-    output.appendChild(box);
-  });
+container.innerHTML+=`
+
+<div class="stackItem">
+
+${stack[i]}
+
+</div>
+
+`;
+
 }
 
-function stackMsg(text, color = "#dc2626") {
-  const msg = document.getElementById("stackMessage");
-  msg.textContent = text;
-  msg.style.color = color;
+container.innerHTML+=`
+
+<div class="bottomLabel">BOTTOM</div>
+
+`;
+
+}
+function stackMessage(text,color="green"){
+
+const msg=document.getElementById("stackMessage");
+
+msg.innerHTML=text;
+
+msg.style.color=color;
+
+}
+function pushStack(){
+
+const value=document.getElementById("stackValue").value;
+
+if(value==="") return;
+
+stack.push(Number(value));
+
+drawStack();
+
+stackMessage("Element Pushed");
+
+}
+function popStack(){
+
+if(stack.length===0){
+
+stackMessage("Stack Underflow","red");
+
+return;
+
 }
 
-function stackPush() {
-  const value = document.getElementById("stackValue").value.trim();
-  if (value === "") {
-    stackMsg("Please enter a value.");
-    return;
-  }
+stack.pop();
 
-  stackData.push(Number(value));
-  drawStack(true);
-  stackMsg(`Pushed ${value} into stack`, "green");
+drawStack();
+
+stackMessage("Element Popped");
+
+}
+function peekStack(){
+
+if(stack.length===0){
+
+stackMessage("Stack Empty","red");
+
+return;
+
 }
 
-function stackPop() {
-  if (stackData.length === 0) {
-    stackMsg("Stack underflow.");
-    return;
-  }
+stackMessage("Top Element : "+stack[stack.length-1]);
 
-  const popped = stackData.pop();
-  drawStack();
-  stackMsg(`Popped ${popped}`, "green");
+}
+function isEmptyStack(){
+
+if(stack.length===0)
+
+stackMessage("Stack is Empty");
+
+else
+
+stackMessage("Stack is Not Empty");
+
+}
+function sizeStack(){
+
+stackMessage("Stack Size : "+stack.length);
+
+}
+function resetStack(){
+
+stack=[];
+
+drawStack();
+
+stackMessage("Stack Cleared");
+
 }
 
-function stackPeek() {
-  if (stackData.length === 0) {
-    stackMsg("Stack is empty.");
-    return;
-  }
+/* ==========================================
+              QUEUE VISUALIZER
+========================================== */
 
-  drawStack(true);
-  stackMsg(`Top element is ${stackData[stackData.length - 1]}`, "green");
+let queue=[];
+
+function renderQueue(){
+
+document.getElementById("visualizerPanel").innerHTML=`
+
+<div class="ds-layout">
+
+<div class="left-panel">
+
+<h2>Queue Operations</h2>
+
+<input type="number" id="queueValue" placeholder="Enter Value">
+
+<button onclick="enqueue()">Enqueue</button>
+
+<button onclick="dequeue()">Dequeue</button>
+
+<button onclick="frontQueue()">Front</button>
+
+<button onclick="rearQueue()">Rear</button>
+
+<button onclick="isEmptyQueue()">is Empty</button>
+
+<button onclick="sizeQueue()">Size</button>
+
+<button onclick="resetQueue()">Reset</button>
+
+<div id="queueMessage" class="message"></div>
+
+<div class="complexity">
+
+<h3>Time Complexity</h3>
+
+<p>Enqueue : O(1)</p>
+
+<p>Dequeue : O(1)</p>
+
+<p>Front : O(1)</p>
+
+<p>Rear : O(1)</p>
+
+<p>isEmpty : O(1)</p>
+
+<p>Size : O(1)</p>
+
+</div>
+
+</div>
+
+<div class="right-panel">
+
+<h2>Queue Visualization</h2>
+
+<div id="queueContainer" class="queueContainer"></div>
+
+</div>
+
+</div>
+
+`;
+
+drawQueue();
+
+}
+function drawQueue(){
+
+const container=document.getElementById("queueContainer");
+
+container.innerHTML="";
+
+if(queue.length===0){
+
+container.innerHTML="<h2>Queue is Empty</h2>";
+
+return;
+
 }
 
-function stackIsEmpty() {
-  stackMsg(stackData.length === 0 ? "Yes, stack is empty." : "No, stack is not empty.", "green");
+container.innerHTML+=`
+
+<div class="queueLabel front">
+
+FRONT →
+
+</div>
+
+<div class="queueRow">
+
+`;
+
+queue.forEach(value=>{
+
+container.innerHTML+=`
+
+<div class="queueItem">
+
+${value}
+
+</div>
+
+`;
+
+});
+
+container.innerHTML+=`
+
+</div>
+
+<div class="queueLabel rear">
+
+← REAR
+
+</div>
+
+`;
+
+}
+function queueMessage(text,color="green"){
+
+const msg=document.getElementById("queueMessage");
+
+msg.innerHTML=text;
+
+msg.style.color=color;
+
+}
+function enqueue(){
+
+const value=document.getElementById("queueValue").value;
+
+if(value==="") return;
+
+queue.push(Number(value));
+
+drawQueue();
+
+queueMessage("Element Enqueued");
+
+}
+function dequeue(){
+
+if(queue.length===0){
+
+queueMessage("Queue Underflow","red");
+
+return;
+
 }
 
-function stackSize() {
-  stackMsg(`Stack size is ${stackData.length}`, "green");
+queue.shift();
+
+drawQueue();
+
+queueMessage("Element Dequeued");
+
+}
+function frontQueue(){
+
+if(queue.length===0){
+
+queueMessage("Queue is Empty","red");
+
+return;
+
 }
 
-function stackReset() {
-  stackData = [];
-  drawStack();
-  stackMsg("Stack cleared successfully.", "green");
+queueMessage("Front Element : "+queue[0]);
+
+}
+function rearQueue(){
+
+if(queue.length===0){
+
+queueMessage("Queue is Empty","red");
+
+return;
+
+}
+
+queueMessage("Rear Element : "+queue[queue.length-1]);
+
+}
+function isEmptyQueue(){
+
+queueMessage(
+
+queue.length===0 ?
+
+"Queue is Empty"
+
+:
+
+"Queue is Not Empty"
+
+);
+
+}
+function sizeQueue(){
+
+queueMessage("Queue Size : "+queue.length);
+
+}
+function resetQueue(){
+
+queue=[];
+
+drawQueue();
+
+queueMessage("Queue Cleared");
+
+}
+
+/* ==========================================
+          LINKED LIST VISUALIZER
+========================================== */
+
+let linkedList=[];
+
+function renderLinkedList(){
+
+document.getElementById("visualizerPanel").innerHTML=`
+
+<div class="ds-layout">
+
+<div class="left-panel">
+
+<h2>Linked List Operations</h2>
+
+<input type="number" id="llValue" placeholder="Enter Value">
+
+<input type="number" id="llIndex" placeholder="Enter Position">
+
+<button onclick="insertBeginningLL()">Insert Beginning</button>
+
+<button onclick="insertEndLL()">Insert End</button>
+
+<button onclick="insertPositionLL()">Insert At Position</button>
+
+<button onclick="deleteBeginningLL()">Delete Beginning</button>
+
+<button onclick="deleteEndLL()">Delete End</button>
+
+<button onclick="deleteValueLL()">Delete Value</button>
+
+<button onclick="searchLL()">Search</button>
+
+<button onclick="reverseLL()">Reverse</button>
+
+<button onclick="countLL()">Count Nodes</button>
+
+<button onclick="resetLL()">Reset</button>
+
+<div id="llMessage" class="message"></div>
+
+<div class="complexity">
+
+<h3>Time Complexity</h3>
+
+<p>Insert Beginning : O(1)</p>
+
+<p>Insert End : O(n)</p>
+
+<p>Insert Position : O(n)</p>
+
+<p>Delete : O(n)</p>
+
+<p>Search : O(n)</p>
+
+<p>Reverse : O(n)</p>
+
+</div>
+
+</div>
+
+<div class="right-panel">
+
+<h2>Linked List Visualization</h2>
+
+<div id="linkedListContainer" class="linkedListContainer"></div>
+
+</div>
+
+</div>
+
+`;
+
+drawLinkedList();
+
+}
+function drawLinkedList(){
+
+const container=document.getElementById("linkedListContainer");
+
+container.innerHTML="";
+
+if(linkedList.length===0){
+
+container.innerHTML="<h2>Linked List is Empty</h2>";
+
+return;
+
+}
+
+linkedList.forEach((value,index)=>{
+
+container.innerHTML+=`
+
+<div class="node">
+
+<div class="nodeBox">${value}</div>
+
+</div>
+
+`;
+
+if(index!=linkedList.length-1){
+
+container.innerHTML+=`
+
+<div class="arrow">→</div>
+
+`;
+
+}
+
+});
+
+container.innerHTML+=`
+
+<div class="nullNode">NULL</div>
+
+`;
+
+}
+function llMessage(text,color="green"){
+
+const msg=document.getElementById("llMessage");
+
+msg.innerHTML=text;
+
+msg.style.color=color;
+
+}
+function insertBeginningLL(){
+
+const value=document.getElementById("llValue").value;
+
+if(value==="") return;
+
+linkedList.unshift(Number(value));
+
+drawLinkedList();
+
+llMessage("Inserted at Beginning");
+
+}
+function insertEndLL(){
+
+const value=document.getElementById("llValue").value;
+
+if(value==="") return;
+
+linkedList.push(Number(value));
+
+drawLinkedList();
+
+llMessage("Inserted at End");
+
+}
+function insertPositionLL(){
+
+const value=document.getElementById("llValue").value;
+
+const pos=document.getElementById("llIndex").value;
+
+if(value==="" || pos==="") return;
+
+linkedList.splice(Number(pos),0,Number(value));
+
+drawLinkedList();
+
+llMessage("Inserted Successfully");
+
+}
+function deleteBeginningLL(){
+
+if(linkedList.length===0){
+
+llMessage("Linked List Empty","red");
+
+return;
+
+}
+
+linkedList.shift();
+
+drawLinkedList();
+
+llMessage("Deleted Beginning Node");
+
+}
+function deleteEndLL(){
+
+if(linkedList.length===0){
+
+llMessage("Linked List Empty","red");
+
+return;
+
+}
+
+linkedList.pop();
+
+drawLinkedList();
+
+llMessage("Deleted Last Node");
+
+}
+function deleteValueLL(){
+
+const value=document.getElementById("llValue").value;
+
+const index=linkedList.indexOf(Number(value));
+
+if(index==-1){
+
+llMessage("Value Not Found","red");
+
+return;
+
+}
+
+linkedList.splice(index,1);
+
+drawLinkedList();
+
+llMessage("Node Deleted");
+
+}
+function searchLL(){
+
+const value=document.getElementById("llValue").value;
+
+const index=linkedList.indexOf(Number(value));
+
+if(index==-1)
+
+llMessage("Value Not Found","red");
+
+else
+
+llMessage("Found at Position : "+index);
+
+}
+function reverseLL(){
+
+linkedList.reverse();
+
+drawLinkedList();
+
+llMessage("Linked List Reversed");
+
+}
+function countLL(){
+
+llMessage("Total Nodes : "+linkedList.length);
+
+}
+function resetLL(){
+
+linkedList=[];
+
+drawLinkedList();
+
+llMessage("Linked List Cleared");
+
+}
+/* ==========================================
+           TREE VISUALIZER (BST)
+========================================== */
+
+let tree = [];
+
+function renderTree(){
+
+document.getElementById("visualizerPanel").innerHTML = `
+
+<div class="ds-layout">
+
+<div class="left-panel">
+
+<h2>Tree Operations</h2>
+
+<input type="number" id="treeValue" placeholder="Enter Value">
+
+<button onclick="insertTree()">Insert</button>
+
+<button onclick="deleteTree()">Delete</button>
+
+<button onclick="searchTree()">Search</button>
+
+<button onclick="inorderTree()">Inorder</button>
+
+<button onclick="preorderTree()">Preorder</button>
+
+<button onclick="postorderTree()">Postorder</button>
+
+<button onclick="findMinTree()">Find Minimum</button>
+
+<button onclick="findMaxTree()">Find Maximum</button>
+
+<button onclick="treeHeight()">Height</button>
+
+<button onclick="countNodes()">Count Nodes</button>
+
+<button onclick="countLeafNodes()">Leaf Nodes</button>
+
+<button onclick="resetTree()">Reset</button>
+
+<div id="treeMessage" class="message"></div>
+
+<div class="complexity">
+
+<h3>Time Complexity</h3>
+
+<p>Insert : O(log n)</p>
+
+<p>Delete : O(log n)</p>
+
+<p>Search : O(log n)</p>
+
+<p>Traversals : O(n)</p>
+
+</div>
+
+</div>
+
+<div class="right-panel">
+
+<h2>Tree Visualization</h2>
+
+<div id="treeContainer" class="treeContainer"></div>
+
+</div>
+
+</div>
+
+`;
+
+drawTree();
+
+}
+function drawTree(){
+
+const container=document.getElementById("treeContainer");
+
+container.innerHTML="";
+
+if(tree.length===0){
+
+container.innerHTML="<h2>Tree is Empty</h2>";
+
+return;
+
+}
+
+let level=0;
+let i=0;
+
+while(i<tree.length){
+
+let count=Math.pow(2,level);
+
+let row=document.createElement("div");
+
+row.className="treeRow";
+
+for(let j=0;j<count && i<tree.length;j++,i++){
+
+row.innerHTML+=`
+
+<div class="treeNode">
+
+${tree[i]}
+
+</div>
+
+`;
+
+}
+
+container.appendChild(row);
+
+level++;
+
+}
+
+}
+function treeMessage(text,color="green"){
+
+document.getElementById("treeMessage").innerHTML=text;
+
+document.getElementById("treeMessage").style.color=color;
+
+}
+function insertTree(){
+
+const value=document.getElementById("treeValue").value;
+
+if(value==="") return;
+
+tree.push(Number(value));
+
+tree.sort((a,b)=>a-b);
+
+drawTree();
+
+treeMessage("Inserted Successfully");
+
+}
+function deleteTree(){
+
+const value=document.getElementById("treeValue").value;
+
+const index=tree.indexOf(Number(value));
+
+if(index==-1){
+
+treeMessage("Value Not Found","red");
+
+return;
+
+}
+
+tree.splice(index,1);
+
+drawTree();
+
+treeMessage("Deleted Successfully");
+
+}
+function searchTree(){
+
+const value=document.getElementById("treeValue").value;
+
+if(tree.includes(Number(value)))
+
+treeMessage("Value Found");
+
+else
+
+treeMessage("Value Not Found","red");
+
+}
+function inorderTree(){
+
+treeMessage("Inorder : "+tree.join(" → "));
+
+}
+
+function preorderTree(){
+
+treeMessage("Preorder : "+tree.join(" → "));
+
+}
+
+function postorderTree(){
+
+treeMessage("Postorder : "+tree.slice().reverse().join(" → "));
+
+}
+function findMinTree(){
+
+if(tree.length===0){
+
+treeMessage("Tree is Empty","red");
+
+return;
+
+}
+
+treeMessage("Minimum Value : "+Math.min(...tree));
+
+}
+function findMaxTree(){
+
+if(tree.length===0){
+
+treeMessage("Tree is Empty","red");
+
+return;
+
+}
+
+treeMessage("Maximum Value : "+Math.max(...tree));
+
+}
+function treeHeight(){
+
+if(tree.length===0){
+
+treeMessage("Height : 0");
+
+return;
+
+}
+
+let height=Math.floor(Math.log2(tree.length))+1;
+
+treeMessage("Tree Height : "+height);
+
+}
+function countNodes(){
+
+treeMessage("Total Nodes : "+tree.length);
+
+}
+
+function countLeafNodes(){
+
+if(tree.length===0){
+
+treeMessage("Leaf Nodes : 0");
+
+return;
+
+}
+
+let leaves=0;
+
+for(let i=0;i<tree.length;i++){
+
+let left=2*i+1;
+
+let right=2*i+2;
+
+if(left>=tree.length && right>=tree.length){
+
+leaves++;
+
+}
+
+}
+
+treeMessage("Leaf Nodes : "+leaves);
+
+}
+
+function resetTree(){
+
+tree=[];
+
+drawTree();
+
+treeMessage("Tree Cleared");
+
+}
+/*==========================================
+            GRAPH VISUALIZER
+===========================================*/
+
+let graph = {};
+
+/* =========================
+        UI RENDER
+========================= */
+function renderGraph() {
+
+document.getElementById("visualizerPanel").innerHTML = `
+
+<div class="ds-layout">
+
+<div class="left-panel">
+
+<h2>Graph Operations</h2>
+
+<input type="text" id="vertex" placeholder="Vertex">
+<input type="text" id="vertex1" placeholder="From">
+<input type="text" id="vertex2" placeholder="To">
+
+<button onclick="addVertex()">Add Vertex</button>
+<button onclick="addEdge()">Add Edge</button>
+<button onclick="removeVertex()">Remove Vertex</button>
+<button onclick="removeEdge()">Remove Edge</button>
+<button onclick="searchVertex()">Search Vertex</button>
+<button onclick="bfsGraph()">BFS</button>
+<button onclick="dfsGraph()">DFS</button>
+<button onclick="displayGraph()">Display Graph</button>
+<button onclick="resetGraph()">Reset</button>
+
+<div id="graphMessage" class="message"></div>
+
+</div>
+
+<div class="right-panel">
+
+<h2>Graph Visualization</h2>
+
+<!-- IMPORTANT FIX -->
+<canvas id="graphCanvas" width="600" height="400"></canvas>
+
+</div>
+
+</div>
+
+`;
+
+drawGraph();
 }
 
 /* =========================
-   QUEUE VISUALIZER
+        DRAW GRAPH
 ========================= */
-let queueData = [];
+function drawGraph() {
 
-function renderQueueUI() {
-  visualizerPanel.innerHTML = `
-    <div class="visualizer-box">
-      <div class="controls">
-        <input type="number" id="queueValue" placeholder="Enter value" />
-        <button class="action-btn" onclick="queueEnqueue()">Enqueue</button>
-        <button class="action-btn" onclick="queueDequeue()">Dequeue</button>
-        <button class="action-btn" onclick="queueFront()">Front</button>
-        <button class="action-btn" onclick="queueRear()">Rear</button>
-        <button class="action-btn" onclick="queueIsEmpty()">isEmpty</button>
-        <button class="action-btn" onclick="queueSize()">Size</button>
-        <button class="action-btn" onclick="queueReset()">Reset</button>
-      </div>
+const canvas = document.getElementById("graphCanvas");
+if (!canvas) return;
 
-      <div id="queueOutput" class="queue-container"></div>
-      <div id="queueMessage" class="message"></div>
+const ctx = canvas.getContext("2d");
+ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      <div class="complexity-box">
-        <h2>Queue Operations</h2>
-        <p><strong>Enqueue:</strong> O(1)</p>
-        <p><strong>Dequeue:</strong> O(n) with array shift</p>
-        <p><strong>Front / Rear:</strong> O(1)</p>
-        <p><strong>isEmpty:</strong> O(1)</p>
-        <p><strong>Size:</strong> O(1)</p>
-      </div>
-    </div>
-  `;
-  drawQueue();
-}
+let nodes = Object.keys(graph);
 
-function drawQueue(highlightIndex = -1) {
-  const output = document.getElementById("queueOutput");
-  output.innerHTML = "";
-
-  if (queueData.length === 0) {
-    output.innerHTML = `<p class="empty-text">Queue is empty</p>`;
+if (nodes.length === 0) {
+    ctx.font = "18px Arial";
+    ctx.fillText("Graph is Empty", 220, 200);
     return;
-  }
-
-  queueData.forEach((value, index) => {
-    const box = document.createElement("div");
-    box.className = "queue-box";
-    box.textContent = value;
-
-    if (index === highlightIndex) {
-      box.style.background = "#16a34a";
-    }
-
-    output.appendChild(box);
-  });
 }
 
-function queueMsg(text, color = "#dc2626") {
-  const msg = document.getElementById("queueMessage");
-  msg.textContent = text;
-  msg.style.color = color;
-}
+/* ---- circular layout ---- */
+let centerX = canvas.width / 2;
+let centerY = canvas.height / 2;
+let radius = 150;
 
-function queueEnqueue() {
-  const value = document.getElementById("queueValue").value.trim();
-  if (value === "") {
-    queueMsg("Please enter a value.");
-    return;
-  }
+let pos = {};
 
-  queueData.push(Number(value));
-  drawQueue(queueData.length - 1);
-  queueMsg(`Enqueued ${value}`, "green");
-}
+nodes.forEach((node, i) => {
+    let angle = (i / nodes.length) * 2 * Math.PI;
+    pos[node] = {
+        x: centerX + radius * Math.cos(angle),
+        y: centerY + radius * Math.sin(angle)
+    };
+});
 
-function queueDequeue() {
-  if (queueData.length === 0) {
-    queueMsg("Queue is empty.");
-    return;
-  }
+/* ---- draw edges ---- */
+ctx.strokeStyle = "#555";
+ctx.lineWidth = 2;
 
-  const removed = queueData.shift();
-  drawQueue();
-  queueMsg(`Dequeued ${removed}`, "green");
-}
+nodes.forEach(node => {
+    graph[node].forEach(nei => {
+        if (pos[nei]) {
+            ctx.beginPath();
+            ctx.moveTo(pos[node].x, pos[node].y);
+            ctx.lineTo(pos[nei].x, pos[nei].y);
+            ctx.stroke();
+        }
+    });
+});
 
-function queueFront() {
-  if (queueData.length === 0) {
-    queueMsg("Queue is empty.");
-    return;
-  }
+/* ---- draw nodes ---- */
+nodes.forEach(node => {
+    let p = pos[node];
 
-  drawQueue(0);
-  queueMsg(`Front element is ${queueData[0]}`, "green");
-}
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 20, 0, Math.PI * 2);
+    ctx.fillStyle = "#4CAF50";
+    ctx.fill();
 
-function queueRear() {
-  if (queueData.length === 0) {
-    queueMsg("Queue is empty.");
-    return;
-  }
+    ctx.fillStyle = "white";
+    ctx.font = "bold 14px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(node, p.x, p.y);
+});
 
-  drawQueue(queueData.length - 1);
-  queueMsg(`Rear element is ${queueData[queueData.length - 1]}`, "green");
-}
-
-function queueIsEmpty() {
-  queueMsg(queueData.length === 0 ? "Yes, queue is empty." : "No, queue is not empty.", "green");
-}
-
-function queueSize() {
-  queueMsg(`Queue size is ${queueData.length}`, "green");
-}
-
-function queueReset() {
-  queueData = [];
-  drawQueue();
-  queueMsg("Queue cleared successfully.", "green");
 }
 
 /* =========================
-   LINKED LIST VISUALIZER
+        MESSAGE
 ========================= */
-let linkedListData = [];
-
-function renderLinkedListUI() {
-  visualizerPanel.innerHTML = `
-    <div class="visualizer-box">
-      <div class="controls">
-        <input type="number" id="llValue" placeholder="Enter value" />
-        <input type="number" id="llIndex" placeholder="Enter index / position" />
-        <button class="action-btn" onclick="llInsertBeginning()">Insert Beginning</button>
-        <button class="action-btn" onclick="llInsertEnd()">Insert End</button>
-        <button class="action-btn" onclick="llInsertAtIndex()">Insert At Index</button>
-        <button class="action-btn" onclick="llDeleteBeginning()">Delete Beginning</button>
-        <button class="action-btn" onclick="llDeleteEnd()">Delete End</button>
-        <button class="action-btn" onclick="llDeleteByValue()">Delete By Value</button>
-        <button class="action-btn" onclick="llDeleteByPosition()">Delete By Position</button>
-        <button class="action-btn" onclick="llSearch()">Search</button>
-        <button class="action-btn" onclick="llReverse()">Reverse</button>
-        <button class="action-btn" onclick="llCount()">Count</button>
-        <button class="action-btn" onclick="llReset()">Reset</button>
-      </div>
-
-      <div id="llOutput" class="linkedlist-container"></div>
-      <div id="llMessage" class="message"></div>
-
-      <div class="complexity-box">
-        <h2>Linked List Operations</h2>
-        <p><strong>Insert / Delete / Search:</strong> O(n)</p>
-        <p><strong>Insert Beginning / Delete Beginning:</strong> O(1) conceptually</p>
-        <p><strong>Reverse:</strong> O(n)</p>
-        <p><strong>Count:</strong> O(1) using length property here</p>
-      </div>
-    </div>
-  `;
-  drawLinkedList();
-}
-
-function drawLinkedList(highlightIndex = -1) {
-  const output = document.getElementById("llOutput");
-  output.innerHTML = "";
-
-  if (linkedListData.length === 0) {
-    output.innerHTML = `<p class="empty-text">Linked List is empty</p>`;
-    return;
-  }
-
-  linkedListData.forEach((value, index) => {
-    const node = document.createElement("div");
-    node.className = "node";
-
-    const box = document.createElement("div");
-    box.className = "node-box";
-    box.textContent = value;
-
-    if (index === highlightIndex) {
-      box.style.background = "#16a34a";
-    }
-
-    node.appendChild(box);
-
-    if (index !== linkedListData.length - 1) {
-      const arrow = document.createElement("div");
-      arrow.className = "arrow";
-      arrow.textContent = "→";
-      node.appendChild(arrow);
-    } else {
-      const nullText = document.createElement("div");
-      nullText.className = "arrow";
-      nullText.textContent = "→ NULL";
-      node.appendChild(nullText);
-    }
-
-    output.appendChild(node);
-  });
-}
-
-function llMsg(text, color = "#dc2626") {
-  const msg = document.getElementById("llMessage");
-  msg.textContent = text;
-  msg.style.color = color;
-}
-
-function getLLValue() {
-  return document.getElementById("llValue").value.trim();
-}
-
-function getLLIndex() {
-  return document.getElementById("llIndex").value.trim();
-}
-
-function llInsertBeginning() {
-  const value = getLLValue();
-  if (value === "") {
-    llMsg("Please enter a value.");
-    return;
-  }
-
-  linkedListData.unshift(Number(value));
-  drawLinkedList(0);
-  llMsg(`Inserted ${value} at beginning`, "green");
-}
-
-function llInsertEnd() {
-  const value = getLLValue();
-  if (value === "") {
-    llMsg("Please enter a value.");
-    return;
-  }
-
-  linkedListData.push(Number(value));
-  drawLinkedList(linkedListData.length - 1);
-  llMsg(`Inserted ${value} at end`, "green");
-}
-
-function llInsertAtIndex() {
-  const value = getLLValue();
-  const index = getLLIndex();
-
-  if (value === "" || index === "") {
-    llMsg("Please enter both value and index.");
-    return;
-  }
-
-  const i = Number(index);
-  if (i < 0 || i > linkedListData.length) {
-    llMsg("Invalid index.");
-    return;
-  }
-
-  linkedListData.splice(i, 0, Number(value));
-  drawLinkedList(i);
-  llMsg(`Inserted ${value} at position ${i}`, "green");
-}
-
-function llDeleteBeginning() {
-  if (linkedListData.length === 0) {
-    llMsg("Linked List is empty.");
-    return;
-  }
-
-  const removed = linkedListData.shift();
-  drawLinkedList();
-  llMsg(`Deleted ${removed} from beginning`, "green");
-}
-
-function llDeleteEnd() {
-  if (linkedListData.length === 0) {
-    llMsg("Linked List is empty.");
-    return;
-  }
-
-  const removed = linkedListData.pop();
-  drawLinkedList();
-  llMsg(`Deleted ${removed} from end`, "green");
-}
-
-function llDeleteByValue() {
-  const value = getLLValue();
-  if (value === "") {
-    llMsg("Please enter value.");
-    return;
-  }
-
-  const v = Number(value);
-  const idx = linkedListData.indexOf(v);
-
-  if (idx === -1) {
-    llMsg(`${v} not found.`);
-    return;
-  }
-
-  linkedListData.splice(idx, 1);
-  drawLinkedList();
-  llMsg(`Deleted ${v}`, "green");
-}
-
-function llDeleteByPosition() {
-  const index = getLLIndex();
-  if (index === "") {
-    llMsg("Please enter position.");
-    return;
-  }
-
-  const i = Number(index);
-  if (i < 0 || i >= linkedListData.length) {
-    llMsg("Invalid position.");
-    return;
-  }
-
-  const removed = linkedListData[i];
-  linkedListData.splice(i, 1);
-  drawLinkedList();
-  llMsg(`Deleted ${removed} from position ${i}`, "green");
-}
-
-function llSearch() {
-  const value = getLLValue();
-  if (value === "") {
-    llMsg("Please enter value.");
-    return;
-  }
-
-  const v = Number(value);
-  const idx = linkedListData.indexOf(v);
-
-  if (idx === -1) {
-    drawLinkedList();
-    llMsg(`${v} not found.`);
-  } else {
-    drawLinkedList(idx);
-    llMsg(`${v} found at position ${idx}`, "green");
-  }
-}
-
-function llReverse() {
-  if (linkedListData.length === 0) {
-    llMsg("Linked List is empty.");
-    return;
-  }
-
-  linkedListData.reverse();
-  drawLinkedList();
-  llMsg("Linked List reversed successfully.", "green");
-}
-
-function llCount() {
-  llMsg(`Linked List contains ${linkedListData.length} node(s)`, "green");
-}
-
-function llReset() {
-  linkedListData = [];
-  drawLinkedList();
-  llMsg("Linked List cleared successfully.", "green");
+function graphMessage(text, color = "green") {
+document.getElementById("graphMessage").innerHTML = text;
+document.getElementById("graphMessage").style.color = color;
 }
 
 /* =========================
-   BST VISUALIZER
+        OPERATIONS
 ========================= */
-let bstData = [];
 
-/* ---------- BST helper tree ---------- */
-class BSTNode {
-  constructor(value) {
-    this.value = value;
-    this.left = null;
-    this.right = null;
-  }
+function addVertex() {
+let v = document.getElementById("vertex").value.trim().toUpperCase();
+if (!v) return;
+
+if (!graph[v]) {
+    graph[v] = [];
+    graphMessage("Vertex Added");
+} else {
+    graphMessage("Vertex Already Exists", "red");
 }
 
-function buildBSTFromArray(arr) {
-  let root = null;
-  arr.forEach(v => {
-    root = bstInsertNode(root, v);
-  });
-  return root;
+drawGraph();
 }
 
-function bstInsertNode(root, value) {
-  if (!root) return new BSTNode(value);
-  if (value < root.value) root.left = bstInsertNode(root.left, value);
-  else if (value > root.value) root.right = bstInsertNode(root.right, value);
-  return root;
+function addEdge() {
+let from = document.getElementById("vertex1").value.trim().toUpperCase();
+let to = document.getElementById("vertex2").value.trim().toUpperCase();
+
+if (!from || !to) return;
+
+if (!graph[from]) graph[from] = [];
+if (!graph[to]) graph[to] = [];
+
+graph[from].push(to);
+graph[to].push(from);
+
+graphMessage("Edge Added");
+drawGraph();
 }
 
-function bstSearchNode(root, value) {
-  if (!root) return false;
-  if (root.value === value) return true;
-  if (value < root.value) return bstSearchNode(root.left, value);
-  return bstSearchNode(root.right, value);
-}
+function removeVertex() {
+let v = document.getElementById("vertex").value.trim().toUpperCase();
 
-function bstFindMinNode(root) {
-  while (root && root.left) root = root.left;
-  return root;
-}
-
-function bstDeleteNode(root, value) {
-  if (!root) return null;
-
-  if (value < root.value) {
-    root.left = bstDeleteNode(root.left, value);
-  } else if (value > root.value) {
-    root.right = bstDeleteNode(root.right, value);
-  } else {
-    if (!root.left && !root.right) return null;
-    if (!root.left) return root.right;
-    if (!root.right) return root.left;
-
-    let minRight = bstFindMinNode(root.right);
-    root.value = minRight.value;
-    root.right = bstDeleteNode(root.right, minRight.value);
-  }
-  return root;
-}
-
-function inorder(root, result = []) {
-  if (!root) return result;
-  inorder(root.left, result);
-  result.push(root.value);
-  inorder(root.right, result);
-  return result;
-}
-
-function preorder(root, result = []) {
-  if (!root) return result;
-  result.push(root.value);
-  preorder(root.left, result);
-  preorder(root.right, result);
-  return result;
-}
-
-function postorder(root, result = []) {
-  if (!root) return result;
-  postorder(root.left, result);
-  postorder(root.right, result);
-  result.push(root.value);
-  return result;
-}
-
-function renderBSTUI() {
-  visualizerPanel.innerHTML = `
-    <div class="visualizer-box">
-      <div class="controls">
-        <input type="number" id="bstValue" placeholder="Enter value" />
-        <button class="action-btn" onclick="bstInsert()">Insert</button>
-        <button class="action-btn" onclick="bstSearch()">Search</button>
-        <button class="action-btn" onclick="bstDelete()">Delete</button>
-        <button class="action-btn" onclick="bstShowInorder()">Inorder</button>
-        <button class="action-btn" onclick="bstShowPreorder()">Preorder</button>
-        <button class="action-btn" onclick="bstShowPostorder()">Postorder</button>
-        <button class="action-btn" onclick="bstFindMin()">Min</button>
-        <button class="action-btn" onclick="bstFindMax()">Max</button>
-        <button class="action-btn" onclick="bstReset()">Reset</button>
-      </div>
-
-      <div id="bstOutput" class="structure-output"></div>
-      <div id="bstMessage" class="message"></div>
-
-      <div class="complexity-box">
-        <h2>BST Operations</h2>
-        <p><strong>Insert / Search / Delete:</strong> O(log n) average, O(n) worst</p>
-        <p><strong>Traversals:</strong> O(n)</p>
-      </div>
-    </div>
-  `;
-  drawBST();
-}
-
-function drawBST(extraText = "") {
-  const output = document.getElementById("bstOutput");
-
-  if (bstData.length === 0) {
-    output.textContent = "BST is empty";
+if (!graph[v]) {
+    graphMessage("Vertex Not Found", "red");
     return;
-  }
-
-  const root = buildBSTFromArray(bstData);
-  const inorderVals = inorder(root, []).join("  ");
-  output.textContent =
-    "BST Elements (Inorder Sorted):\n\n" +
-    inorderVals +
-    (extraText ? `\n\n${extraText}` : "");
 }
 
-function bstMsg(text, color = "#dc2626") {
-  const msg = document.getElementById("bstMessage");
-  msg.textContent = text;
-  msg.style.color = color;
+delete graph[v];
+
+for (let node in graph) {
+    graph[node] = graph[node].filter(x => x !== v);
 }
 
-function bstInsert() {
-  const value = document.getElementById("bstValue").value.trim();
-  if (value === "") {
-    bstMsg("Please enter a value.");
-    return;
-  }
-
-  const v = Number(value);
-  if (bstData.includes(v)) {
-    bstMsg(`${v} already exists in BST.`);
-    return;
-  }
-
-  bstData.push(v);
-  drawBST();
-  bstMsg(`Inserted ${v} into BST`, "green");
+graphMessage("Vertex Removed");
+drawGraph();
 }
 
-function bstSearch() {
-  const value = document.getElementById("bstValue").value.trim();
-  if (value === "") {
-    bstMsg("Please enter a value.");
-    return;
-  }
+function removeEdge() {
+let from = document.getElementById("vertex1").value.trim().toUpperCase();
+let to = document.getElementById("vertex2").value.trim().toUpperCase();
 
-  const v = Number(value);
-  const root = buildBSTFromArray(bstData);
-  if (bstSearchNode(root, v)) {
-    drawBST(`Found ${v} in BST`);
-    bstMsg(`${v} found in BST`, "green");
-  } else {
-    drawBST();
-    bstMsg(`${v} not found in BST`);
-  }
+if (!graph[from] || !graph[to]) return;
+
+graph[from] = graph[from].filter(x => x !== to);
+graph[to] = graph[to].filter(x => x !== from);
+
+graphMessage("Edge Removed");
+drawGraph();
 }
 
-function bstDelete() {
-  const value = document.getElementById("bstValue").value.trim();
-  if (value === "") {
-    bstMsg("Please enter a value.");
-    return;
-  }
+function searchVertex() {
+let v = document.getElementById("vertex").value.trim().toUpperCase();
 
-  const v = Number(value);
-  if (!bstData.includes(v)) {
-    bstMsg(`${v} not found in BST.`);
-    return;
-  }
-
-  let root = buildBSTFromArray(bstData);
-  root = bstDeleteNode(root, v);
-  bstData = inorder(root, []);
-  drawBST();
-  bstMsg(`Deleted ${v} from BST`, "green");
-}
-
-function bstShowInorder() {
-  if (bstData.length === 0) {
-    bstMsg("BST is empty.");
-    return;
-  }
-  const root = buildBSTFromArray(bstData);
-  const result = inorder(root, []).join(" → ");
-  drawBST(`Inorder: ${result}`);
-  bstMsg("Displayed inorder traversal", "green");
-}
-
-function bstShowPreorder() {
-  if (bstData.length === 0) {
-    bstMsg("BST is empty.");
-    return;
-  }
-  const root = buildBSTFromArray(bstData);
-  const result = preorder(root, []).join(" → ");
-  drawBST(`Preorder: ${result}`);
-  bstMsg("Displayed preorder traversal", "green");
-}
-
-function bstShowPostorder() {
-  if (bstData.length === 0) {
-    bstMsg("BST is empty.");
-    return;
-  }
-  const root = buildBSTFromArray(bstData);
-  const result = postorder(root, []).join(" → ");
-  drawBST(`Postorder: ${result}`);
-  bstMsg("Displayed postorder traversal", "green");
-}
-
-function bstFindMin() {
-  if (bstData.length === 0) {
-    bstMsg("BST is empty.");
-    return;
-  }
-  const root = buildBSTFromArray(bstData);
-  const minNode = bstFindMinNode(root);
-  drawBST(`Minimum value: ${minNode.value}`);
-  bstMsg(`Minimum value is ${minNode.value}`, "green");
-}
-
-function bstFindMax() {
-  if (bstData.length === 0) {
-    bstMsg("BST is empty.");
-    return;
-  }
-  const root = buildBSTFromArray(bstData);
-  let curr = root;
-  while (curr.right) curr = curr.right;
-  drawBST(`Maximum value: ${curr.value}`);
-  bstMsg(`Maximum value is ${curr.value}`, "green");
-}
-
-function bstReset() {
-  bstData = [];
-  drawBST();
-  bstMsg("BST cleared successfully.", "green");
+if (graph[v]) graphMessage("Vertex Found");
+else graphMessage("Vertex Not Found", "red");
 }
 
 /* =========================
-   HEAP VISUALIZER (MAX HEAP)
+        BFS
 ========================= */
-let heapData = [];
+function bfsGraph() {
+let start = document.getElementById("vertex").value.trim().toUpperCase();
+if (!graph[start]) return;
 
-function renderHeapUI() {
-  visualizerPanel.innerHTML = `
-    <div class="visualizer-box">
-      <div class="controls">
-        <input type="number" id="heapValue" placeholder="Enter value" />
-        <button class="action-btn" onclick="heapInsert()">Insert</button>
-        <button class="action-btn" onclick="heapDeleteRoot()">Delete Root</button>
-        <button class="action-btn" onclick="heapPeek()">Peek Root</button>
-        <button class="action-btn" onclick="heapReset()">Reset</button>
-      </div>
+let visited = new Set();
+let queue = [start];
+let ans = [];
 
-      <div id="heapOutput" class="structure-output"></div>
-      <div id="heapMessage" class="message"></div>
+visited.add(start);
 
-      <div class="complexity-box">
-        <h2>Heap Operations (Max Heap)</h2>
-        <p><strong>Insert:</strong> O(log n)</p>
-        <p><strong>Delete Root:</strong> O(log n)</p>
-        <p><strong>Peek Root:</strong> O(1)</p>
-      </div>
-    </div>
-  `;
-  drawHeap();
+while (queue.length) {
+    let node = queue.shift();
+    ans.push(node);
+
+    graph[node].forEach(n => {
+        if (!visited.has(n)) {
+            visited.add(n);
+            queue.push(n);
+        }
+    });
 }
 
-function drawHeap(extraText = "") {
-  const output = document.getElementById("heapOutput");
-
-  if (heapData.length === 0) {
-    output.textContent = "Heap is empty";
-    return;
-  }
-
-  output.textContent =
-    "Heap Array Representation:\n\n" +
-    heapData.join("  ") +
-    "\n\nHeap Levels:\n" +
-    heapTreeText(heapData) +
-    (extraText ? `\n${extraText}` : "");
-}
-
-function heapTreeText(arr) {
-  if (arr.length === 0) return "Heap is empty";
-
-  let text = "";
-  let level = 0;
-  let i = 0;
-
-  while (i < arr.length) {
-    let count = Math.pow(2, level);
-    let line = arr.slice(i, i + count).join("   ");
-    text += line + "\n";
-    i += count;
-    level++;
-  }
-  return text;
-}
-
-function heapifyUp(arr, index) {
-  while (index > 0) {
-    let parent = Math.floor((index - 1) / 2);
-    if (arr[parent] >= arr[index]) break;
-    [arr[parent], arr[index]] = [arr[index], arr[parent]];
-    index = parent;
-  }
-}
-
-function heapifyDown(arr, index) {
-  while (true) {
-    let left = 2 * index + 1;
-    let right = 2 * index + 2;
-    let largest = index;
-
-    if (left < arr.length && arr[left] > arr[largest]) largest = left;
-    if (right < arr.length && arr[right] > arr[largest]) largest = right;
-
-    if (largest === index) break;
-
-    [arr[index], arr[largest]] = [arr[largest], arr[index]];
-    index = largest;
-  }
-}
-
-function heapMsg(text, color = "#dc2626") {
-  const msg = document.getElementById("heapMessage");
-  msg.textContent = text;
-  msg.style.color = color;
-}
-
-function heapInsert() {
-  const value = document.getElementById("heapValue").value.trim();
-  if (value === "") {
-    heapMsg("Please enter a value.");
-    return;
-  }
-
-  const v = Number(value);
-  heapData.push(v);
-  heapifyUp(heapData, heapData.length - 1);
-  drawHeap();
-  heapMsg(`Inserted ${v} into heap`, "green");
-}
-
-function heapDeleteRoot() {
-  if (heapData.length === 0) {
-    heapMsg("Heap is empty.");
-    return;
-  }
-
-  const root = heapData[0];
-
-  if (heapData.length === 1) {
-    heapData.pop();
-  } else {
-    heapData[0] = heapData.pop();
-    heapifyDown(heapData, 0);
-  }
-
-  drawHeap();
-  heapMsg(`Deleted root ${root}`, "green");
-}
-
-function heapPeek() {
-  if (heapData.length === 0) {
-    heapMsg("Heap is empty.");
-    return;
-  }
-
-  drawHeap(`Root element: ${heapData[0]}`);
-  heapMsg(`Root element is ${heapData[0]}`, "green");
-}
-
-function heapReset() {
-  heapData = [];
-  drawHeap();
-  heapMsg("Heap cleared successfully.", "green");
+graphMessage("BFS: " + ans.join(" → "));
 }
 
 /* =========================
-   GRAPH VISUALIZER
+        DFS
 ========================= */
-let graphData = {};
+function dfsGraph() {
+let start = document.getElementById("vertex").value.trim().toUpperCase();
+if (!graph[start]) return;
 
-function renderGraphUI() {
-  visualizerPanel.innerHTML = `
-    <div class="visualizer-box">
-      <div class="controls">
-        <input type="text" id="graphVertex" placeholder="Vertex (e.g. A)" />
-        <button class="action-btn" onclick="graphAddVertex()">Add Vertex</button>
-        <br />
-        <input type="text" id="graphFrom" placeholder="From" />
-        <input type="text" id="graphTo" placeholder="To" />
-        <button class="action-btn" onclick="graphAddEdge()">Add Edge</button>
-        <button class="action-btn" onclick="graphDeleteVertex()">Delete Vertex</button>
-        <button class="action-btn" onclick="graphDeleteEdge()">Delete Edge</button>
-        <button class="action-btn" onclick="graphBFS()">BFS</button>
-        <button class="action-btn" onclick="graphDFS()">DFS</button>
-        <button class="action-btn" onclick="graphReset()">Reset</button>
-      </div>
+let visited = new Set();
+let ans = [];
 
-      <div id="graphOutput" class="structure-output"></div>
-      <div id="graphMessage" class="message"></div>
+function dfs(v) {
+    visited.add(v);
+    ans.push(v);
 
-      <div class="complexity-box">
-        <h2>Graph Operations</h2>
-        <p>Add / Delete Vertex, Add / Delete Edge, BFS, DFS</p>
-      </div>
-    </div>
-  `;
-  drawGraph();
+    graph[v].forEach(n => {
+        if (!visited.has(n)) dfs(n);
+    });
 }
 
-function drawGraph(extraText = "") {
-  const output = document.getElementById("graphOutput");
+dfs(start);
 
-  if (Object.keys(graphData).length === 0) {
-    output.textContent = "Graph is empty";
-    return;
-  }
-
-  let text = "Adjacency List:\n\n";
-  for (let vertex in graphData) {
-    text += `${vertex} → ${graphData[vertex].join(", ")}\n`;
-  }
-
-  if (extraText) text += `\n${extraText}`;
-  output.textContent = text;
-}
-
-function graphMsg(text, color = "#dc2626") {
-  const msg = document.getElementById("graphMessage");
-  msg.textContent = text;
-  msg.style.color = color;
-}
-
-function graphAddVertex() {
-  const vertex = document.getElementById("graphVertex").value.trim().toUpperCase();
-  if (vertex === "") {
-    graphMsg("Please enter a vertex.");
-    return;
-  }
-
-  if (graphData[vertex]) {
-    graphMsg(`Vertex ${vertex} already exists.`);
-    return;
-  }
-
-  graphData[vertex] = [];
-  drawGraph();
-  graphMsg(`Vertex ${vertex} added`, "green");
-}
-
-function graphAddEdge() {
-  const from = document.getElementById("graphFrom").value.trim().toUpperCase();
-  const to = document.getElementById("graphTo").value.trim().toUpperCase();
-
-  if (from === "" || to === "") {
-    graphMsg("Please enter both vertices.");
-    return;
-  }
-
-  if (!graphData[from]) graphData[from] = [];
-  if (!graphData[to]) graphData[to] = [];
-
-  if (!graphData[from].includes(to)) graphData[from].push(to);
-  if (!graphData[to].includes(from)) graphData[to].push(from);
-
-  drawGraph();
-  graphMsg(`Edge added between ${from} and ${to}`, "green");
-}
-
-function graphDeleteVertex() {
-  const vertex = document.getElementById("graphVertex").value.trim().toUpperCase();
-  if (vertex === "") {
-    graphMsg("Please enter a vertex.");
-    return;
-  }
-
-  if (!graphData[vertex]) {
-    graphMsg(`Vertex ${vertex} does not exist.`);
-    return;
-  }
-
-  delete graphData[vertex];
-  for (let v in graphData) {
-    graphData[v] = graphData[v].filter(nei => nei !== vertex);
-  }
-
-  drawGraph();
-  graphMsg(`Vertex ${vertex} deleted`, "green");
-}
-
-function graphDeleteEdge() {
-  const from = document.getElementById("graphFrom").value.trim().toUpperCase();
-  const to = document.getElementById("graphTo").value.trim().toUpperCase();
-
-  if (from === "" || to === "") {
-    graphMsg("Please enter both vertices.");
-    return;
-  }
-
-  if (!graphData[from] || !graphData[to]) {
-    graphMsg("One or both vertices do not exist.");
-    return;
-  }
-
-  graphData[from] = graphData[from].filter(v => v !== to);
-  graphData[to] = graphData[to].filter(v => v !== from);
-
-  drawGraph();
-  graphMsg(`Edge removed between ${from} and ${to}`, "green");
-}
-
-function bfsTraversal(start) {
-  const visited = new Set();
-  const queue = [start];
-  const result = [];
-
-  visited.add(start);
-
-  while (queue.length > 0) {
-    const node = queue.shift();
-    result.push(node);
-
-    for (let nei of graphData[node]) {
-      if (!visited.has(nei)) {
-        visited.add(nei);
-        queue.push(nei);
-      }
-    }
-  }
-
-  return result;
-}
-
-function dfsTraversal(start, visited = new Set(), result = []) {
-  visited.add(start);
-  result.push(start);
-
-  for (let nei of graphData[start]) {
-    if (!visited.has(nei)) {
-      dfsTraversal(nei, visited, result);
-    }
-  }
-
-  return result;
-}
-
-function graphBFS() {
-  const start = document.getElementById("graphVertex").value.trim().toUpperCase();
-  if (start === "") {
-    graphMsg("Enter starting vertex in Vertex box.");
-    return;
-  }
-
-  if (!graphData[start]) {
-    graphMsg(`Vertex ${start} does not exist.`);
-    return;
-  }
-
-  const result = bfsTraversal(start).join(" → ");
-  drawGraph(`BFS from ${start}: ${result}`);
-  graphMsg(`BFS completed from ${start}`, "green");
-}
-
-function graphDFS() {
-  const start = document.getElementById("graphVertex").value.trim().toUpperCase();
-  if (start === "") {
-    graphMsg("Enter starting vertex in Vertex box.");
-    return;
-  }
-
-  if (!graphData[start]) {
-    graphMsg(`Vertex ${start} does not exist.`);
-    return;
-  }
-
-  const result = dfsTraversal(start).join(" → ");
-  drawGraph(`DFS from ${start}: ${result}`);
-  graphMsg(`DFS completed from ${start}`, "green");
-}
-
-function graphReset() {
-  graphData = {};
-  drawGraph();
-  graphMsg("Graph cleared successfully.", "green");
+graphMessage("DFS: " + ans.join(" → "));
 }
 
 /* =========================
-   TRIE VISUALIZER
+        DISPLAY / RESET
 ========================= */
-let trieWords = [];
 
-function renderTrieUI() {
-  visualizerPanel.innerHTML = `
-    <div class="visualizer-box">
-      <div class="controls">
-        <input type="text" id="trieWord" placeholder="Enter word" />
-        <button class="action-btn" onclick="trieInsert()">Insert</button>
-        <button class="action-btn" onclick="trieSearch()">Search</button>
-        <button class="action-btn" onclick="triePrefixSearch()">Prefix Search</button>
-        <button class="action-btn" onclick="trieReset()">Reset</button>
-      </div>
-
-      <div id="trieOutput" class="structure-output"></div>
-      <div id="trieMessage" class="message"></div>
-
-      <div class="complexity-box">
-        <h2>Trie Operations</h2>
-        <p><strong>Insert:</strong> O(L)</p>
-        <p><strong>Search:</strong> O(L)</p>
-        <p><strong>Prefix Search:</strong> O(L)</p>
-        <p>L = length of word</p>
-      </div>
-    </div>
-  `;
-  drawTrie();
+function displayGraph() {
+drawGraph();
+graphMessage("Graph Displayed");
 }
 
-function drawTrie(extraText = "") {
-  const output = document.getElementById("trieOutput");
-
-  if (trieWords.length === 0) {
-    output.textContent = "Trie is empty";
-    return;
-  }
-
-  output.textContent =
-    "Words stored in Trie:\n\n" +
-    trieWords.join(", ") +
-    (extraText ? `\n\n${extraText}` : "");
-}
-
-function trieMsg(text, color = "#dc2626") {
-  const msg = document.getElementById("trieMessage");
-  msg.textContent = text;
-  msg.style.color = color;
-}
-
-function trieInsert() {
-  const word = document.getElementById("trieWord").value.trim().toLowerCase();
-  if (word === "") {
-    trieMsg("Please enter a word.");
-    return;
-  }
-
-  if (trieWords.includes(word)) {
-    trieMsg(`"${word}" already exists.`);
-    return;
-  }
-
-  trieWords.push(word);
-  drawTrie();
-  trieMsg(`Inserted "${word}" into Trie`, "green");
-}
-
-function trieSearch() {
-  const word = document.getElementById("trieWord").value.trim().toLowerCase();
-  if (word === "") {
-    trieMsg("Please enter a word.");
-    return;
-  }
-
-  if (trieWords.includes(word)) {
-    drawTrie(`"${word}" found in Trie`);
-    trieMsg(`"${word}" found in Trie`, "green");
-  } else {
-    drawTrie();
-    trieMsg(`"${word}" not found`);
-  }
-}
-
-function triePrefixSearch() {
-  const prefix = document.getElementById("trieWord").value.trim().toLowerCase();
-  if (prefix === "") {
-    trieMsg("Please enter a prefix.");
-    return;
-  }
-
-  const matched = trieWords.filter(word => word.startsWith(prefix));
-  if (matched.length === 0) {
-    drawTrie();
-    trieMsg(`No words found with prefix "${prefix}"`);
-  } else {
-    drawTrie(`Words with prefix "${prefix}": ${matched.join(", ")}`);
-    trieMsg(`Prefix search completed for "${prefix}"`, "green");
-  }
-}
-
-function trieReset() {
-  trieWords = [];
-  drawTrie();
-  trieMsg("Trie cleared successfully.", "green");
+function resetGraph() {
+graph = {};
+drawGraph();
+graphMessage("Graph Cleared");
 }
